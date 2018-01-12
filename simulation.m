@@ -26,7 +26,7 @@ y0 = 1000;
 %2. := x
 %3. := y
 result= zeros(3,months+1);
-result(1,1)=1;
+result(1,1)=0;
 result(2,1)=x0;
 result(3,1)=y0;
 figure
