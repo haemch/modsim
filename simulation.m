@@ -25,14 +25,14 @@ y0 = 1000;
 %1. := index
 %2. := x
 %3. := y
-result= zeros(3,months);
+result= zeros(3,months+1);
 result(1,1)=1;
 result(2,1)=x0;
 result(3,1)=y0;
 figure
-for i=2:months
+for i=2:months+1
     
-    result(1,i)=i;
+    result(1,i)=i-1;
     %xn-1
     x = result(2,i-1);
     %yn-1
@@ -51,7 +51,10 @@ for i=2:months
 end
 subplot(3,1,1)
 plot(result(1,:), result(2,:), result(1,:), result(3,:));
-legend('deer','fox')
+legend('deer','fox');
+grid on;
+ylabel('population number');
+xlabel('months');
 
 
 %Task 2
