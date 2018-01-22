@@ -1,13 +1,9 @@
-%Task 1
-
 % duration
 months = 120;
-% schrittweite der diskretisierung? 
+% schrittweite der diskretisierung
 h = 0.1; 
 % resource capacity
 M = 10000;
-
-
 % deer growth
 alpha = 0.001;
 % fox decreasing 
@@ -25,14 +21,15 @@ y0 = 1000;
 %1. := index
 %2. := x
 %3. := y
-result= zeros(3,months);
-result(1,1)=1;
+result= zeros(3,months+1);
+%result(1,1)=1;
+result(1,1)=0;
 result(2,1)=x0;
 result(3,1)=y0;
-figure
-for i=2:months
+
+for i=2:months+1
     
-    result(1,i)=i;
+    result(1,i)=i-1;
     %xn-1
     x = result(2,i-1);
     %yn-1
@@ -49,22 +46,25 @@ for i=2:months
     result(3,i)= y_new;
     
 end
-subplot(3,1,1)
+figure(1);
 plot(result(1,:), result(2,:), result(1,:), result(3,:));
-legend('deer','fox')
+legend('deer','fox');
+grid on;
+ylabel('population number');
+xlabel('months');
+axis([0 120 0 6000]);
 
+% Task 2
+% create rectangular
+rows = 70; %70
+col = 200; % 200, that means 70*200=14000 cells 
+k=1;%1
+p1= 0.01; % probability for prey reproduction 0.01
+p2= 0.8; % probability for predator reproduction 0.8
+p3= 0.01; % probability for predator dying 0.01
 
-%Task 2
-
-rows = 70;
-col = 200;
-k=1;
-p1= 0.01;
-p2= 0.8;
-p3= 0.01;
-
-result_ca= zeros(3,months);
-result_ca(1,1)=1;
+result_ca= zeros(3,months+1);
+result_ca(1,1)=0;
 result_ca(2,1)=x0;
 result_ca(3,1)=y0;
 
@@ -74,25 +74,40 @@ result_ca(3,1)=y0;
 % 1 ... deer
 % 2 ... fox
 N = rows*col;
-random_positions = randperm(N, y0 + x0);
+random_positions = randperm(N, y0 + x0); % choose 5000 cells which have a value between 0 and N
 init_values = zeros(1,N);
 for i=1:(y0+x0)
-    if i<=x0
-        init_values(random_positions(i))=1;
+    if i<=x0 %for the amount of deers
+        init_values(random_positions(i))=1; % 4000 x deer (1)
     else
-        init_values(random_positions(i))=2;
+        init_values(random_positions(i))=2; % 1000 x fox (2)
     end
    
 end
-ca = vec2mat(init_values, col);
-
- 
+%ca = vec2mat(init_values, col); % create rectangular matrix and fill with 1,2,0;  
+ca = reshape(init_values,rows,col);
 
 %simulation of ca
-for m=1:months
-    tmp=ca;
+
+% plot figure at initial state
+m = 0;
+figure(2);
+hold on;
+spy(ca==0, 'w'); % want to color my cells
+spy(ca==2,'r');
+spy(ca==1,'g');
+%axis([]);
+legend('empty','foxes','deer');
+xlabel(['Months: ' num2str(m)])
+hold off;
+%Delaying animation for updating plot after each loop iteration
+pause(1);
+
+
+for m=1:months %m=1:months 
+    tmp=ca; % want to obtain original matrix
     for i=1:rows
-        for j=1:col
+        for j=1:col % go through all cells
             
             %if cell is empty
             if ca(i,j) == 0
@@ -132,29 +147,32 @@ for m=1:months
    
         end
     end
-    ca=tmp;
-    
-    subplot(3,1,2)
+    ca=tmp; % now we have our new matrix setup for the next month
     hold on;
-    spy(ca==0, 'w');
+    spy(ca==0, 'w'); % want to color my cells
     spy(ca==2,'r');
     spy(ca==1,'g');
+    %axis([]);
+    legend('empty','foxes','deer');
+    xlabel(['Months: ' num2str(m)])
     hold off;
-    drawnow
-    
-    result_ca(1,m)=m;
-    result_ca(2,m)= sum(sum(ca==1));
-    result_ca(3,m)= sum(sum(ca==2));
+    %drawnow
+    %Delaying animation
+    pause(0.001);
+        
+    result_ca(1,m+1)= m; % result_ca(1,m) = m
+    result_ca(2,m+1)= sum(sum(ca==1));
+    result_ca(3,m+1)= sum(sum(ca==2));
     
 end
 % add plot of aggregated ca
-subplot(3,1,3)
+figure(3);
 plot(result_ca(1,:), result_ca(2,:), result_ca(1,:), result_ca(3,:));
-legend('deer','fox')
+legend('deer','fox');
 
 %return random neighbour 
 function neighbour = getRandomNeighbour(ca,k,x,y)
-neighbours= [];
+neighbours = [];
 rows=size(ca,1);
 col=size(ca,2);
 for i=(x-k):(x+k)
@@ -167,4 +185,3 @@ end
 
 neighbour = neighbours(randperm(numel(neighbours),1));
 end
-
