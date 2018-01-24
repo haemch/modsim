@@ -28,7 +28,8 @@ function result_ca = Task2_3(x0,y0, months, rows, col, k, p1, p2, p3)
 
         % plot figure at initial state
         m = 0;
-        figure(2);
+        fig2=figure(2);
+        set(fig2,'units','points','position',[5,5,1400,700]);
         hold on;
         spy(ca==0, 'w'); % want to color my cells
         spy(ca==2,'r');
