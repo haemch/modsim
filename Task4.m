@@ -1,8 +1,8 @@
 x0 = 4000;
 y0 = 1000;
 months = 60;
-rows = 20;
-col = 500;
+rows = 1;
+col = 10000;
 rows2 = 100;
 col2 = 100;
 
